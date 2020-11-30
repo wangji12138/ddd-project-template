@@ -1,0 +1,165 @@
+# 日志配置
+logging:
+  level:
+    com.xxxxxxxxx.*: info
+
+# 环境配置
+server:
+  # 名称
+  name: @project.name@
+  #版本
+  version: @project.version@
+  # 服务端口
+  port: 18000
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    # 项目contextPath
+    context-path: /
+    session:
+      cookie:
+        http-only: true
+        tracking-modes: cookie
+        timeout: -1
+#      tomcat:
+#        # tomcat的URI编码
+#        uri-encoding: UTF-8
+#        # tomcat最大线程数，默认为500
+#        max-threads: 500
+#        # Tomcat启动初始化的线程数，默认值60
+#        min-spare-threads: 60
+#        max-http-post-size: -1
+
+# 数据源配置
+spring:
+  application:
+    name: ddd-template-service
+
+  # 资源信息
+  messages:
+    jackson:
+      time-zone: GMT+8
+      date-format: yyyy-MM-dd HH:mm:ss
+      servlet:
+        multipart:
+          enabled: true
+          max-file-size: 30MB
+          max-request-size: 30MB
+
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+
+  datasource:
+    name: ddd-template-service
+    type: com.alibaba.druid.pool.DruidDataSource
+    #druid相关配置
+    druid:
+      #监控统计拦截的filters
+      filters: stat
+      #      driver-class-name: com.mysql.cj.jdbc.Driver
+      #基本属性
+      url: jdbc:mysql://127.0.0.1:3306/ddd-template-service?useSSL=false&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      username: root
+      password: 123456
+
+      #配置初始化大小/最小/最大
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      #获取连接等待超时时间
+      max-wait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      #一个连接在池中最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+
+  # jpa配置
+  jpa:
+    show-sql: true
+    database: mysql
+    database-platform: mysql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+
+  # Redis相关
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password: null
+    port: 6379
+    timeout: 10000 #超时时间
+    jedis:
+      pool:
+        max-idle: 8 #最大等待连接中的数量,设 负值 为没有限制
+        min-idle: 0 #最小等待连接中的数量,设 负值 为没有限制
+        max-active: 200 #最大连接数据库连接数,设 负值 为没有限制
+        max-wait: -1  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        test-on-borrow: true #检查连接可用性, 确保获取的redis实例可用
+
+  # Elasticsearch
+  # 9200端口是用来让HTTP REST API来访问ElasticSearch，而9300端口是传输层监听的默认端口
+  elasticsearch:
+    rest:
+      username: elastic
+      password: null
+      uris: http://127.0.0.1:9200
+      read-timeout: 60s
+      connection-timeout: 30s
+
+  # thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/ #配置模板路径，默认是templates，可以不用配置
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8 #编码
+    mode: LEGACYHTML5 # 用非严格的 HTML
+    cache: true #开发配置为false,避免修改模板还要重启服务器
+
+  aop:
+    auto: true
+    proxy-target-class: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+# Actuator 相关
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    endpoint:
+      health:
+        show-details: always
+
+# MyBatis
+mybatis:
+  # 搜索指定包别名
+  type-aliases-package: com.xxxxxxxxx.model
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapper-locations: classpath:mapper/*Mapper.xml
+  # 加载全局的配置文件 如果有特殊需求 可以加mybatis-config.xml配置文件
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check
+
