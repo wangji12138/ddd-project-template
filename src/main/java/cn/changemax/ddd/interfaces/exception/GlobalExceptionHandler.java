@@ -1,9 +1,8 @@
 package cn.changemax.ddd.interfaces.exception;
 
-import cn.changemax.utils.ApiResult;
-import com.alibaba.fastjson.JSON;
+import cn.changemax.ddd.infrastructure.utils.ApiResult;
+import cn.changemax.ddd.infrastructure.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -44,7 +43,6 @@ public class GlobalExceptionHandler {
         return ((accept != null && accept.contains("application/json") || (xRequestedWith != null && xRequestedWith.contains("XMLHttpRequest"))));
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseBody
     public ApiResult<?> handleMissingServletRequestParameterException(MissingServletRequestParameterException e, HttpServletRequest request) {
@@ -53,7 +51,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
     public ApiResult<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
@@ -62,7 +59,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ApiResult<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
@@ -73,7 +69,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
     public ApiResult<?> handleServiceException(ConstraintViolationException e, HttpServletRequest request) {
@@ -82,7 +77,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     @ResponseBody
     public ApiResult<?> handleValidationException(ValidationException e, HttpServletRequest request) {
@@ -91,7 +85,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     public ApiResult<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
@@ -100,7 +93,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseBody
     public ApiResult<?> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e, HttpServletRequest request) {
@@ -109,7 +101,6 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
     @ResponseBody
     public ApiResult<?> handleBindException(BindException e, HttpServletRequest request) {
@@ -120,26 +111,7 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(message);
     }
 
-    //    // 捕捉shiro的异常
-////    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    @ExceptionHandler(ShiroException.class)
-//    @ResponseBody
-//    public ApiResult<?> handle401(ShiroException e, HttpServletRequest request) {
-//        log.error("服务端错误 [method={}\turl={}\tquery={}\tmsg={}]", request.getMethod(), request.getRequestURI(), request.getQueryString(), e.getMessage());
-//        return ApiResult.fail(e.getMessage());
-//    }
-//
-    // 捕捉UnauthorizedException
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(UnauthorizedException.class)
-    @ResponseBody
-    public ApiResult<?> handle401(UnauthorizedException ex, HttpServletRequest request) {
-        log.error("【权限异常】 [method={}\turl={}\tquery={}\tmsg={}]", request.getMethod(), request.getRequestURI(), request.getQueryString(), ex.getMessage());
-        return ApiResult.fail(Long.parseLong(ApiCode.APP_CODE + ApiCode.LOGIN_UNAUTHORIZED_ERROR), "缺少权限，请联系管理员：" + ex.getMessage());
-    }
-
     @ExceptionHandler({Exception.class})
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String defaultErrorHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
         log.error("服务端错误 [method={}\turl={}\tquery={}]", request.getMethod(), request.getRequestURI(), request.getQueryString());
         log.error("完整堆栈信息：");
@@ -151,7 +123,7 @@ public class GlobalExceptionHandler {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=utf-8");
             try (PrintWriter writer = response.getWriter()) {
-                writer.append(JSON.toJSONString(ApiResult.fail(ApiCode.SERVER_ERROR, "系统错误，请联系站长." + e.getMessage())));
+                writer.append(GsonUtils.beanToString(ApiResult.fail(ApiCode.SERVER_ERROR, "系统错误" + e.getMessage())));
             } catch (IOException ioe) {
                 log.error("返回Response信息出现IOException异常:" + ioe.getMessage());
             }
@@ -161,7 +133,6 @@ public class GlobalExceptionHandler {
         }
     }
 
-    //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = CmException.class)
     @ResponseBody
     public ApiResult<?> businessException(CmException e, HttpServletRequest request) {

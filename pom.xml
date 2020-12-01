@@ -12,7 +12,7 @@
     <artifactId>ddd</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>dddTemplate</name>
+    <name>DDD-Template-Service</name>
     <description>DDD Project template</description>
 
     <properties>
@@ -118,6 +118,7 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!--apache.commons-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -158,6 +159,13 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
+        </dependency>
+
+        <!-- mysql 驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!--google-gson-->
