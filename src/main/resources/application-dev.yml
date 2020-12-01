@@ -1,7 +1,7 @@
 # 日志配置
 logging:
   level:
-    com.xxxxxxxxx.*: info
+    cn.changemax.*: info
 
 # 环境配置
 server:
@@ -21,14 +21,6 @@ server:
         http-only: true
         tracking-modes: cookie
         timeout: -1
-#      tomcat:
-#        # tomcat的URI编码
-#        uri-encoding: UTF-8
-#        # tomcat最大线程数，默认为500
-#        max-threads: 500
-#        # Tomcat启动初始化的线程数，默认值60
-#        min-spare-threads: 60
-#        max-http-post-size: -1
 
 # 数据源配置
 spring:
@@ -150,7 +142,7 @@ management:
 # MyBatis
 mybatis:
   # 搜索指定包别名
-  type-aliases-package: com.xxxxxxxxx.model
+  type-aliases-package: cn.changemax.domain.model
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapper-locations: classpath:mapper/*Mapper.xml
   # 加载全局的配置文件 如果有特殊需求 可以加mybatis-config.xml配置文件
@@ -162,4 +154,20 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
   returnPageInfo: check
+
+# 全局配置
+cm-properties:
+  # Swagger相关配置
+  swagger:
+    enabled: true
+    group-name: 'changemax v1.0.0 API'
+    base-package: 'cn.changemax.controller'
+    title: 'ChangeMax Ecology Swagger Restful API.'
+    description: 'ChangeMax Ecology API Description'
+    version: '1.0.0'
+    author: 'ChangeMax-WJ'
+    url: 'https://changemax.cn'
+    email: 'changemaxwj@163.com'
+    license: 'Apache 2.0'
+    license-url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 
